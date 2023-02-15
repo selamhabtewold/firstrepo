@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+#cent{position:absolute;
+  top:20%;
+  left:50%;
+  margin-top:-50px; 
+  margin-left:-100px}
+  </style>
+</head>
+
+<body>
+
+
+<div id="cent">
+  <div class=" max-w-auto md:max-w-lg md:mr-4 bg-gray-400 text-black  p-4 m-4">
+    <form  id="user-form">
+      <label for="name">Name</label>
+      <input required type="text" name="name" id="name" class="bg-gray-100 inline-block rounded-lg"><br><br>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" required><br><br>
+      <label for="psd">Password</label>
+      <input type="password" name="psd" id="psd"><br><br>
+      <label for="dob" >Date of Birth</label>
+      <input required type="date" name="dob" id="dob"><br><br>
+      <input required type="checkbox" id="check"><label>accept terms and conditions</label>
+      <span><button id="submit" style="padding:10px,10px; background-color: blueviolet; margin-left: 50px;" >submit</button></span>
+    </form>
+  </div>
+  <div class=" max-w-auto md:max-w-lg md:mr-4 bg-green-400 text-red italic pl-4 ml-4">
+    <h2>entries</h2>
+    <div id="user-entries">
+    </div>
+     
+    </div>
+  </div>
+
+
+
+
+  <script >
+    let userForm = document.getElementById("user-form");
+
+const retrieveEntries = () => {
+  let entries = localStorage.getItem("user-entries");
+  if (entries) {
+    entries = JSON.parse(entries);
+
+  } else {
+    entries = [];
+  }
+  return entries;
+};
+
+let userEntries = retrieveEntries();
+
+const display = () => {
+  const entries = retrieveEntries();
+
+
+const tableEntries = entries.map((entry) => {
+    const nameCell = `<td class='border px-4 py-2> ${entry.name}</td>`;
+    const emailCell = `<td class='border px-4 py-2> ${entry.email}</td>`;
+    const psdCell = `<td class='border px-4 py-2> ${entry.psd}</td>`;
+    const dobCell = `<td class='border px-4 py-2> ${entry.dob}</td>`;
+    
+    const checkCell = `<td class='border px-4 py-2> ${entry.check}</td>`;
+    const row = ` <tr>${nameCell}  ${emailCell}  ${psdCell}  ${dobCell}   ${checkCell}</tr>`;
+    return row;
+  }).join("\n");
+
+  const table = `<table class="table-auto w-full"><tr>
+<th class="px-4 py-2">Email</th>
+<th class="px-4 py-2">DOB</th>
+<th class="px-4 py-2">Name</th>
+<th class="px-4 py-2">Password</th>
+<th class="px-4 py-2">Accepted Terms</th>
+</tr>${tableEntries}</table>`;
+
+
+  let details = document.getElementById("user-entries");
+  details.innerHTML = table;
+};
+    
+
+const saveForm = (event) => {
+  event.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const psd = document.getElementById("psd").value;
+  const dob = document.getElementById("dob").value;
+
+
+
+  const tandc = document.getElementById("check").checked;
+
+  const entry = {
+    name,
+    email,
+    psd,
+    dob,
+    tandc
+  };
+
+  userEntries.push(entry);
+
+  localStorage.setItem("user-entries", JSON.stringify(userEntries));
+  display();
+};
+
+userForm.addEventListener("submit", saveForm);
+display();
+localStorage.clear();
+
+
+const input = document.querySelector("#dob");
+    input.addEventListener("input", function() {
+      const now = new Date();
+      const enteredDate = new Date(input.value);
+      const age = now.getFullYear() - enteredDate.getFullYear();
+      if (age < 18 || age > 55) {
+        input.setCustomValidity("Please enter a date between 1968 and 2005.");
+      } else {
+        input.setCustomValidity("");
+      }
+    });
+
+
+  </script>
+
+
+
+
+
+</body>
+
+</html>
